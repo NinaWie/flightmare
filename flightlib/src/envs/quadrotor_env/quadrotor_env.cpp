@@ -60,10 +60,10 @@ bool QuadrotorEnv::reset(Ref<Vector<>> obs, const bool random) {
     quad_state_.x(QS::VELY) = uniform_dist_(random_gen_);
     quad_state_.x(QS::VELZ) = uniform_dist_(random_gen_);
     // reset orientation
-    quad_state_.x(QS::ATTW) = uniform_dist_(random_gen_);
-    quad_state_.x(QS::ATTX) = uniform_dist_(random_gen_);
-    quad_state_.x(QS::ATTY) = uniform_dist_(random_gen_);
-    quad_state_.x(QS::ATTZ) = uniform_dist_(random_gen_);
+    quad_state_.x(QS::ATTW) = 1; // uniform_dist_(random_gen_);
+    quad_state_.x(QS::ATTX) = 0; // uniform_dist_(random_gen_);
+    quad_state_.x(QS::ATTY) = 0; // uniform_dist_(random_gen_);
+    quad_state_.x(QS::ATTZ) = 0; // uniform_dist_(random_gen_);
     quad_state_.qx /= quad_state_.qx.norm();
   }
   // reset quadrotor with random states
@@ -71,7 +71,7 @@ bool QuadrotorEnv::reset(Ref<Vector<>> obs, const bool random) {
 
   // reset control command
   cmd_.t = 0.0;
-  cmd_.thrusts.setZero();
+  // cmd_.thrusts.setZero();
 
   // obtain observations
   getObs(obs);
@@ -91,9 +91,15 @@ bool QuadrotorEnv::getObs(Ref<Vector<>> obs) {
 }
 
 Scalar QuadrotorEnv::step(const Ref<Vector<>> act, Ref<Vector<>> obs) {
-  quad_act_ = act.cwiseProduct(act_std_) + act_mean_;
+  // quad_act_ = act.cwiseProduct(act_std_) + act_mean_;
+  std::cout << act << std::endl;
+  Vector<3> omega = {act[1], act[2], act[3]};
   cmd_.t += sim_dt_;
-  cmd_.thrusts = quad_act_;
+  cmd_.collective_thrust = act[0];
+  cmd_.omega[0] = act[1];
+  cmd_.omega[1] = act[2];
+  cmd_.omega[2] = act[3];
+  // cmd_.thrusts = quad_act_;
 
   // simulate quadrotor
   quadrotor_ptr_->run(cmd_, sim_dt_);
