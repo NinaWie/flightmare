@@ -51,7 +51,6 @@ bool Quadrotor::run(const Scalar ctl_dt) {
     // motor_thrusts_ = cmd_.thrusts;
 
     const Vector<4> force_torques = B_allocation_ * motor_thrusts_;
-    std::cout << force_torques << std::endl;
 
     // Compute linear acceleration and body torque
     const Vector<3> force(0.0, 0.0, force_torques[0]);
@@ -109,8 +108,17 @@ Vector<4> Quadrotor::runFlightCtl(const Scalar sim_dt, const Vector<3> &omega,
 
   const Vector<4> thrust_and_torque(force, body_torque_des.x(),
                                     body_torque_des.y(), body_torque_des.z());
+  
+
+  // std::cout << "thrust_and_torque" << std::endl;
+
+  // std::cout << thrust_and_torque << std::endl;
 
   const Vector<4> motor_thrusts_des = B_allocation_inv_ * thrust_and_torque;
+
+  // std::cout << "motor_thrusts_des" << std::endl;
+
+  // std::cout << motor_thrusts_des << std::endl;
 
   return dynamics_.clampThrust(motor_thrusts_des);
 }

@@ -94,7 +94,7 @@ bool QuadrotorEnv::getObs(Ref<Vector<>> obs) {
 
 Scalar QuadrotorEnv::step(const Ref<Vector<>> act, Ref<Vector<>> obs) {
   // quad_act_ = act.cwiseProduct(act_std_) + act_mean_;
-  std::cout << act << std::endl;
+  // std::cout << act << std::endl;
   Vector<3> omega = {act[1], act[2], act[3]};
   cmd_.t += sim_dt_;
   cmd_.collective_thrust = act[0];
