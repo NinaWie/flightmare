@@ -146,10 +146,10 @@ Scalar QuadrotorEnv::step(const Ref<Vector<>> act, Ref<Vector<>> obs) {
 }
 
 bool QuadrotorEnv::isTerminalState(Scalar &reward) {
-  if (quad_state_.x(QS::POSZ) <= 0.02) {
-    reward = -0.02;
-    return true;
-  }
+  // if (quad_state_.x(QS::POSZ) <= 0.02) {
+  //   reward = -0.02;
+  //   return true;
+  // }
   reward = 0.0;
   return false;
 }

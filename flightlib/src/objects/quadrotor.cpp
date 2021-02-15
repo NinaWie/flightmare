@@ -71,7 +71,7 @@ bool Quadrotor::run(const Scalar ctl_dt) {
   }
   state_.t += ctl_dt;
   //
-  constrainInWorldBox(old_state);
+  // constrainInWorldBox(old_state);
   return true;
 }
 
@@ -171,6 +171,7 @@ bool Quadrotor::setWorldBox(const Ref<Matrix<3, 2>> box) {
 
 bool Quadrotor::constrainInWorldBox(const QuadState &old_state) {
   if (!old_state.valid()) return false;
+  std::cout << "[Quadrotor] constrain in world" << std::endl;
 
   // violate world box constraint in the x-axis
   if (state_.x(QS::POSX) < world_box_(0, 0) ||
