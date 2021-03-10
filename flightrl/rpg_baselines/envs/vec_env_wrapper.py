@@ -9,7 +9,6 @@ class FlightEnvVec(VecEnv):
         self.wrapper = impl
         self.num_obs = self.wrapper.getObsDim()
         self.num_acts = self.wrapper.getActDim()
-        print(self.num_obs, self.num_acts)
         self._observation_space = spaces.Box(
             np.ones(self.num_obs) * -np.Inf,
             np.ones(self.num_obs) * np.Inf, dtype=np.float32)
@@ -67,9 +66,14 @@ class FlightEnvVec(VecEnv):
             actions.append(action)
         return np.asarray(actions, dtype=np.float32)
 
-    def reset(self):
+    def reset(self, x_pos=0, y_pos=0, z_pos=3):
         self._reward = np.zeros(self.num_envs, dtype=np.float32)
         self.wrapper.reset(self._observation)
+        return self._observation.copy()
+
+    def zero_reset(self, x_pos=0, y_pos=0, z_pos=3):
+        self._reward = np.zeros(self.num_envs, dtype=np.float32)
+        self.wrapper.zero_reset(self._observation, x_pos, y_pos, z_pos)
         return self._observation.copy()
 
     def reset_and_update_info(self):

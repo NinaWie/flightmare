@@ -62,12 +62,47 @@ bool QuadrotorEnv::reset(Ref<Vector<>> obs, const bool random) {
     quad_state_.x(QS::VELY) = uniform_dist_(random_gen_);
     quad_state_.x(QS::VELZ) = uniform_dist_(random_gen_);
     // reset orientation
-    quad_state_.x(QS::ATTW) = 1; // uniform_dist_(random_gen_);
-    quad_state_.x(QS::ATTX) = 0; // uniform_dist_(random_gen_);
-    quad_state_.x(QS::ATTY) = 0; // uniform_dist_(random_gen_);
-    quad_state_.x(QS::ATTZ) = 0; // uniform_dist_(random_gen_);
+    quad_state_.x(QS::ATTW) = uniform_dist_(random_gen_);
+    quad_state_.x(QS::ATTX) = uniform_dist_(random_gen_);
+    quad_state_.x(QS::ATTY) = uniform_dist_(random_gen_);
+    quad_state_.x(QS::ATTZ) = uniform_dist_(random_gen_);
     quad_state_.qx /= quad_state_.qx.norm();
   }
+  // reset quadrotor with random states
+  quadrotor_ptr_->reset(quad_state_);
+
+  // reset control command
+  cmd_.t = 0.0;
+  // cmd_.thrusts.setZero();
+
+  // obtain observations
+  getObs(obs);
+  return true;
+}
+
+bool QuadrotorEnv::zero_reset(Ref<Vector<>> obs, const int x_pos,
+  const int y_pos, const int z_pos) {
+  quad_state_.setZero();
+  quad_act_.setZero();
+
+  // reset to given position and zeros
+  // reset position
+  quad_state_.x(QS::POSX) = x_pos; // uniform_dist_(random_gen_);
+  quad_state_.x(QS::POSY) = y_pos; // uniform_dist_(random_gen_);
+  quad_state_.x(QS::POSZ) = z_pos; // uniform_dist_(random_gen_) + 5;
+  if (quad_state_.x(QS::POSZ) < -0.0)
+    quad_state_.x(QS::POSZ) = -quad_state_.x(QS::POSZ);
+  // reset linear velocity
+  quad_state_.x(QS::VELX) = 0; // uniform_dist_(random_gen_);
+  quad_state_.x(QS::VELY) = 0; // uniform_dist_(random_gen_);
+  quad_state_.x(QS::VELZ) = 0; // uniform_dist_(random_gen_);
+  // reset orientation
+  quad_state_.x(QS::ATTW) = 1; // uniform_dist_(random_gen_);
+  quad_state_.x(QS::ATTX) = 0; // uniform_dist_(random_gen_);
+  quad_state_.x(QS::ATTY) = 0; // uniform_dist_(random_gen_);
+  quad_state_.x(QS::ATTZ) = 0; // uniform_dist_(random_gen_);
+  quad_state_.qx /= quad_state_.qx.norm();
+
   // reset quadrotor with random states
   quadrotor_ptr_->reset(quad_state_);
 

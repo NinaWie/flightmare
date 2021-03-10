@@ -100,11 +100,27 @@ Vector<4> Quadrotor::runFlightCtl(const Scalar sim_dt, const Vector<3> &omega,
                                   const Command &command) {
   const Scalar force = dynamics_.getMass() * command.collective_thrust;
 
-  const Vector<3> omega_err = command.omega - omega;
+  // std::cout << "omega" << std::endl;
+  // std::cout << omega << std::endl;
+  // std::cout << "omega cmd" << std::endl;
 
+  // std::cout << command.omega << std::endl;
+  const Vector<3> omega_err = command.omega - omega;
+  // std::cout << "omega err" << std::endl;
+  // std::cout << omega_err << std::endl;
+  
   const Vector<3> body_torque_des =
     dynamics_.getJ() * Kinv_ang_vel_tau_ * omega_err +
     state_.w.cross(dynamics_.getJ() * state_.w);
+
+  // std::cout << "body_torque_des out" << std::endl;
+  // std::cout << body_torque_des << std::endl;
+
+  // const Vector<3> body_torque_des(body_torque_tmp.x()/0.0261,
+  //         body_torque_tmp.y()/0.0261, body_torque_tmp.z()/0.0405);
+
+  // std::cout << "body_torque_des aft" << std::endl;
+  // std::cout << body_torque_des << std::endl;
 
   const Vector<4> thrust_and_torque(force, body_torque_des.x(),
                                     body_torque_des.y(), body_torque_des.z());

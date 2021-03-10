@@ -75,6 +75,21 @@ bool VecEnv<EnvBase>::reset(Ref<MatrixRowMajor<>> obs) {
   }
   return true;
 }
+template<typename EnvBase>
+bool VecEnv<EnvBase>::zero_reset(Ref<MatrixRowMajor<>> obs, const int x_pos,
+  const int y_pos, const int z_pos) {
+  if (obs.rows() != num_envs_ || obs.cols() != obs_dim_) {
+    logger_.error(
+      "Input matrix dimensions do not match with that of the environment.");
+    return false;
+  }
+
+  receive_id_ = 0;
+  for (int i = 0; i < num_envs_; i++) {
+    envs_[i]->zero_reset(obs.row(i), x_pos, y_pos, z_pos);
+  }
+  return true;
+}
 
 template<typename EnvBase>
 bool VecEnv<EnvBase>::step(Ref<MatrixRowMajor<>> act, Ref<MatrixRowMajor<>> obs,
