@@ -80,8 +80,8 @@ bool QuadrotorEnv::reset(Ref<Vector<>> obs, const bool random) {
   return true;
 }
 
-bool QuadrotorEnv::zero_reset(Ref<Vector<>> obs, const int x_pos,
-  const int y_pos, const int z_pos) {
+bool QuadrotorEnv::zero_reset(Ref<Vector<>> obs, const float x_pos,
+  const float y_pos, const float z_pos) {
   quad_state_.setZero();
   quad_act_.setZero();
 
