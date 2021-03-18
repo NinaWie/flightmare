@@ -44,6 +44,8 @@ bool QuadrotorDynamics::dState(const Ref<const Vector<QuadState::SIZE>> state,
   // differentiate quaternion = dq / dt
   dstate.segment<QS::NATT>(QS::ATT) =
     0.5 * Q_right(q_omega) * state.segment<QS::NATT>(QS::ATT);
+  // std::cout << "q dot"<< std::endl;
+  // std::cout << dstate.segment<QS::NATT>(QS::ATT) << std::endl;
 
   // linear acceleration = dv / dt
   dstate.segment<QS::NVEL>(QS::VEL) = state.segment<QS::NACC>(QS::ACC);

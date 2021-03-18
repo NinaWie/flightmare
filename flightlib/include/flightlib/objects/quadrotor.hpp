@@ -5,6 +5,7 @@
 // flightlib
 #include "flightlib/common/command.hpp"
 #include "flightlib/common/integrator_rk4.hpp"
+#include "flightlib/common/integrator_euler.hpp"
 #include "flightlib/common/types.hpp"
 #include "flightlib/dynamics/quadrotor_dynamics.hpp"
 #include "flightlib/objects/object_base.hpp"

@@ -38,26 +38,39 @@ bool Quadrotor::run(const Scalar ctl_dt) {
 
   // time
   const Scalar max_dt = integrator_ptr_->dtMax();
+  // this max_dt is hard coded 0.0025!
   Scalar remain_ctl_dt = ctl_dt;
 
   // simulation loop
   while (remain_ctl_dt > 0.0) {
+
+    // std::cout << "while loop" << std::endl;
     const Scalar sim_dt = std::min(remain_ctl_dt, max_dt);
 
     const Vector<4> motor_thrusts_des = runFlightCtl(sim_dt, state_.w, cmd_);
+    // std::cout << "motor_thrusts_des" << std::endl;
+    // std::cout << motor_thrusts_des << std::endl;
     //  cmd_.isSingleRotorThrusts() ? cmd_.thrusts : 
 
     runMotors(sim_dt, motor_thrusts_des);
+    // std::cout << "motor_thrusts" << std::endl;
+    // std::cout << motor_thrusts_ << std::endl;
     // motor_thrusts_ = cmd_.thrusts;
 
     const Vector<4> force_torques = B_allocation_ * motor_thrusts_;
 
     // Compute linear acceleration and body torque
     const Vector<3> force(0.0, 0.0, force_torques[0]);
+    // std::cout << "force" << std::endl;
+    // std::cout << force << std::endl;
     state_.a = state_.q() * force * 1.0 / dynamics_.getMass() + gz_;
+    // std::cout << "acc" << std::endl;
+    // std::cout << state_.a << std::endl;
 
     // compute body torque
     state_.tau = force_torques.segment<3>(1);
+    // std::cout << "tau" << std::endl;
+    // std::cout << state_.tau << std::endl;
 
     // dynamics integration
     integrator_ptr_->step(state_.x, sim_dt, next_state.x);
@@ -148,6 +161,8 @@ void Quadrotor::runMotors(const Scalar sim_dt,
 
   // simulate motors as a first-order system
   const Scalar c = std::exp(-sim_dt * dynamics_.getMotorTauInv());
+
+  // std::cout << c << std::endl;
   motor_omega_ = c * motor_omega_ + (1.0 - c) * motor_omega_clamped;
 
   motor_thrusts_ = dynamics_.motorOmegaToThrust(motor_omega_);
@@ -253,7 +268,8 @@ bool Quadrotor::updateDynamics(const QuadrotorDynamics &dynamics) {
   }
   dynamics_ = dynamics;
   integrator_ptr_ =
-    std::make_unique<IntegratorRK4>(dynamics_.getDynamicsFunction(), 2.5e-3);
+    std::make_unique<IntegratorRK4>(dynamics_.getDynamicsFunction(), 0.05);
+    // 2.5e-3);
 
   B_allocation_ = dynamics_.getAllocationMatrix();
   B_allocation_inv_ = B_allocation_.inverse();

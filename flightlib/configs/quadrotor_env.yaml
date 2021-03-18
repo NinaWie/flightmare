@@ -1,6 +1,6 @@
 quadrotor_env:
    camera: no
-   sim_dt: 0.1
+   sim_dt: 0.05
    max_t: 1
    add_camera: yes
 
