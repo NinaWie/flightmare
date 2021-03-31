@@ -8,7 +8,8 @@ setup(name='flightgym',
       long_description='',
       packages=[''],
       package_dir={'': './'},
-      package_data={'': ['flightgym.cpython-36m-x86_64-linux-gnu.so']},
+      package_data={'': ['flightgym.cpython-36m_64-linux-gnu.so']},
       zip_fase=True,
       url=None,
       )
+ 
